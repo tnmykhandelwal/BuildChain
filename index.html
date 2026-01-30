@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildChain | Construction Transparency</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div>
+        <ul class="nav-links">
+            <li><a href="#mission">Our Mission</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#workflow">How It Works</a></li>
+            <li><a href="#portals" class="btn-main">Get Started</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-section">
+        <div class="slideshow-container">
+            <img class="slide" src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop" style="display:block;" alt="Construction Site">
+            <img class="slide" src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop" style="display:none;" alt="Skyscraper">
+            <img class="slide" src="https://static.investindia.gov.in/s3fs-public/2019-11/blockchain1.jpg" style="display:none;" alt="Blockchain Technology">
+        </div>
+        
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-text">
+            <h1>BUILDCHAIN</h1>
+            <p class="tagline" id="typewriter"></p> 
+        </div>
+    </header>
+
+    <section id="mission" class="mission-section">
+        <div class="container">
+            <div class="mission-content">
+                <h2>The Gap in Construction</h2>
+                <p class="mission-text">
+                    The construction sector is the backbone of our society, yet it remains plagued by opacity, delays, and eroding public trust. Every year, billions are lost to disputes and corruption, while quality compromises risk safety. Society needs a shift from verbal promises to verifiable proof. <strong>BuildChain</strong> answers this urgent call by integrating blockchain technology into the very foundation of construction. We enforce accountability by making every material source traceable and every payment conditional on verified progress—building a safer, transparent, and corruption-free future for our communities.
+                </p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Transparency</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">0s</span>
+                        <span class="stat-label">Dispute Delay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>System Capabilities</h2>
+                <div class="underline"></div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <span class="material-icons">fingerprint</span>
+                    </div>
+                    <h3>Hash-Chained Security</h3>
+                    <p>Every log entry—from material delivery to labor attendance—is cryptographically hashed and linked to the previous entry. This creates an append-only, tamper-proof history that prevents retroactive data manipulation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <span class="material-icons">engineering</span>
+                    </div>
+                    <h3>360° Site Management</h3>
+                    <p>Contractors record material deliveries with photo proof and track daily labor attendance. Real-time logging of wages and inventory ensures that budget usage matches on-site reality.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <span class="material-icons">insights</span>
+                    </div>
+                    <h3>Visual Transparency</h3>
+                    <p>A public dashboard powered by Chart.js offers visual analytics on budget vs. progress. Features include real-time map views of sites, quality check reports, and Metamask authentication for secure admin access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="workflow" class="workflow-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Operational Workflow</h2>
+                <p class="subtitle">From Registry to Public Audit</p>
+            </div>
+            <div class="workflow-steps">
+                
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <h4>Project Registry</h4>
+                    <p>Admin (Govt/Institution) initializes the project, defining budget, location, and milestones (Foundation &rarr; Flooring &rarr; Completion) on the ledger.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <h4>Digital Logging</h4>
+                    <p>Contractors log material data (Supplier, Qty, Photos) and labor attendance. Each entry is hashed and permanently stored.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <h4>Milestone Verification</h4>
+                    <p>Upon milestone completion, proof is uploaded. Admins verify quality reports before the system unlocks the next funding stage.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">04</div>
+                    <h4>Public Audit</h4>
+                    <p>Citizens access the read-only dashboard to verify hash chains, view budget utilization charts, and track real-time progress.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="login-selection" id="portals">
+        <div class="section-header">
+            <h2>Select Your Portal</h2>
+            <p>Access the system based on your role</p>
+            <div class="underline"></div>
+        </div>
+
+        <div class="portal-grid">
+            
+            <div class="portal-card admin-card" onclick="window.location.href='login-admin.html'"> 
+                <div class="emoji-large">🛡️</div>
+                <h3>Admin</h3>
+                <p>Manage projects, approve milestones, audit budgets.</p>
+                <button class="card-btn">Login as Admin</button>
+            </div>
+
+            <div class="portal-card contractor-card" onclick="window.location.href='login-contractor.html'">
+                <div class="emoji-large">👷</div>
+                <h3>Contractor</h3>
+                <p>Log materials, upload photos, manage labor.</p>
+                <button class="card-btn">Login as Contractor</button>
+            </div>
+
+            <div class="portal-card public-card" onclick="window.location.href='login-public.html'">
+                <div class="emoji-large">🌍</div>
+                <h3>Public</h3>
+                <p>View progress, verify quality, check budgets.</p>
+                <button class="card-btn">View Progress</button>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>WOC 8.0 BuildChain Project. Decentralizing Construction.</p>
+        </div>
+    </footer>
+
+</body>
+<script src="landing.js"></script>
+</html>

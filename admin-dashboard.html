@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - BuildChain</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="sidebar" id="adminSidebar">
+          <div class="sidebar-header">
+              <span class="logo-text">BUILDCHAIN</span>
+              <button id="sidebarToggle" class="toggle-btn">☰</button>
+          </div>
+          
+          <nav class="sidebar-nav">
+              <a href="#" id="navCreate" class="nav-item active">
+                  <span class="icon">➕</span> <span class="link-text">New Project</span>
+              </a>
+              <a href="#" id="navView" class="nav-item">
+                  <span class="icon">📂</span> <span class="link-text">Project Registry</span>
+              </a>
+              <button id="navMilestones" class="nav-item">
+                  <span class="icon">🚩</span> <span class="link-text">Set Milestones</span>
+              </button>
+              <button id="navLogs" class="nav-item">
+                  <span class="icon">📋</span> <span class="link-text">Contractor Logs</span>
+              </button>
+          </nav>
+          
+          <button id="logoutBtn" class="logout-btn">
+              <span class="icon">⏻</span> <span class="link-text">Logout</span>
+          </button>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="profile-header">
+                <h3>Welcome back, <span id="adminEmail" style="color:#2980b9;">Loading...</span></h3>
+                <p>ID: #ADMIN</p>
+                <div id="projectListSection" style="display: none;">
+                    <h2 style="margin-top:0;">All Registered Projects</h2>
+                    <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                    <div id="projectsContainer" class="portal-grid">
+                        <p>Fetching projects from BuildChain...</p>
+                    </div>
+                </div>
+                
+                <div id="milestoneSection" style="display: none;">
+                    <h2> Update Project Progress</h2>
+                    <hr style="margin-bottom: 20px;">
+                    <div class="project-form">
+                        <form id="milestoneForm">
+                            <div class="form-group">
+                                <label>Select Project to Update</label>
+                                <select id="milestoneProjectSelect" required style="padding: 10px; width: 100%; margin-bottom: 15px;">
+                                    <option value="">Loading Projects...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Current Construction Stage</label>
+                                <div class="milestone-options" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <label style="cursor: pointer; padding: 10px; background: #ecf0f1; border-radius: 5px;">
+                                        <input type="radio" name="stage" value="Foundation" required> Foundation
+                                    </label>
+                                    <label style="cursor: pointer; padding: 10px; background: #ecf0f1; border-radius: 5px;">
+                                        <input type="radio" name="stage" value="Structure"> Structure/Framing
+                                    </label>
+                                    <label style="cursor: pointer; padding: 10px; background: #ecf0f1; border-radius: 5px;">
+                                        <input type="radio" name="stage" value="Flooring"> Flooring/Electrical
+                                    </label>
+                                    <label style="cursor: pointer; padding: 10px; background: #ecf0f1; border-radius: 5px;">
+                                        <input type="radio" name="stage" value="Roofing"> Roofing
+                                    </label>
+                                    <label style="cursor: pointer; padding: 10px; background: #27ae60; color: white; border-radius: 5px;">
+                                        <input type="radio" name="stage" value="Completed"> Completion
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="submit-btn" style="background: #2980b9;">Update Milestone</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="logsSection" style="display: none;">
+                    <h2 style="margin-top:0;">Daily Site Logs</h2>
+                    <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                    <div id="logsContainer" style="display: flex; flex-direction: column; gap: 15px;">
+                        <p>Loading logs...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-form">
+                <h2 style="margin-top:0;">🚧 Register New Project</h2>
+                <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                
+                <form id="createProjectForm">
+                    <div class="form-group">
+                        <label>Project Title</label>
+                        <input type="text" id="pTitle" placeholder="e.g. City Central Library Renovation" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Budget (INR)</label>
+                            <input type="number" id="pBudget" placeholder="500000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="pLocation" placeholder="City, State" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assigned Contractor Email</label>
+                        <input type="email" id="pContractor" placeholder="contractor@company.com" required >
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="pStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Deadline</label>
+                            <input type="date" id="pEndDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Documents</label>
+                        <input type="text" id="pDocument" placeholder="Drive link of document/Blueprint" >
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Project </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

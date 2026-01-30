@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Registration | BuildChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <h2 style="color: #f39c12;">🚧 Contractor Sign Up</h2>
+        <p>Register your company to bid and manage site logs.</p>
+        
+        <form id="contractorSignupForm">
+            <div class="input-group">
+                <label>Company / Contractor Name</label>
+                <input type="text" id="cName" required placeholder="e.g. Apex Construction Ltd.">
+            </div>
+            <div class="input-group">
+                <label>Official Email</label>
+                <input type="email" id="cEmail" required>
+            </div>
+            <div class="input-group">
+                <label>Create Password</label>
+                <input type="password" id="cPassword" required>
+            </div>
+            <button type="submit" class="login-btn" style="background-color: #f39c12;">Create Account</button>
+        </form>
+        
+        <p id="statusMessage" style="color: red; margin-top: 10px;"></p>
+        <hr>
+        <p>Already registered? <a href="login-contractor.html" style="color: #f39c12;">Login here</a></p>
+        <p><a href="index.html">← Back to Home</a></p>
+    </div>
+
+    <script type="module" src="contractor-auth.js"></script>
+</body>
+</html>

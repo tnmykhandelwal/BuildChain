@@ -1,0 +1,861 @@
+:root {
+    /* Color Palette - Deep Navy & Crisp White */
+    --primary: #0b1c2c;       /* Dark Navy */
+    --accent: #2c5282;        /* Corporate Blue */
+    --white: #ffffff;
+    --off-white: #f9f9f9;
+    --text-gray: #888888;
+    
+    /* Typography */
+    --font-main: 'Montserrat', sans-serif;
+    
+    /* Animation Physics (The "Expensive" Feel) */
+    --transition-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    color: var(--primary);
+    background-color: var(--off-white);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+ul {
+    list-style: none;
+}
+
+/* =========================================
+   3. NAVIGATION (Glassmorphism)
+   ========================================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    
+    z-index: 1000;
+    transition: padding 0.3s ease;
+}
+
+.logo {
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: var(--primary);
+}
+
+.logo .dot {
+    color: var(--accent);
+    font-size: 30px;
+    line-height: 0;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.nav-links a {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+/* "NEED HELP?" Button Style */
+.btn-main {
+    border: 2px solid var(--primary);
+    padding: 12px 28px;
+    transition: all 0.3s ease;
+}
+
+.btn-main:hover {
+    background: var(--primary);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; 
+    overflow: hidden;
+    background: #000;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 1;
+    display: none;
+}
+
+/* Dark gradient overlay for text readability */
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+    z-index: 2;
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    width: 90%;
+    z-index: 3;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+.hero-text h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 3px;
+}
+
+.tagline {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.95;
+}
+/* ... (Keep your existing CSS content) ... */
+
+/* =========================================
+   TYPEWRITER EFFECT CURSOR
+   ========================================= */
+.tagline {
+    border-right: 2px solid rgba(255,255,255,0.75);
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 auto;
+    animation: blink-caret 0.75s step-end infinite;
+    max-width: fit-content; /* Centers the typing line */
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: white; }
+}
+
+/* =========================================
+   SECTION 1: MISSION
+   ========================================= */
+.mission-section {
+    padding: 80px 20px;
+    background-color: var(--primary); /* Dark Navy background */
+    color: var(--white);
+    text-align: center;
+}
+
+.mission-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.mission-content h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.mission-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #cbd5e0; /* Light gray text */
+    margin-bottom: 40px;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 30px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* =========================================
+   SECTION 2: FEATURES (The Designed Divs)
+   ========================================= */
+.features-section, .login-selection {
+    padding: 100px 20px;
+    background-color: var(--off-white);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title, .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2, .section-header h2 {
+    font-size: 2.5rem;
+    color: var(--primary);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.underline {
+    width: 60px;
+    height: 4px;
+    background: var(--accent);
+    margin: 15px auto 0;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: var(--white);
+    padding: 40px 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    border-bottom: 3px solid var(--accent);
+}
+
+.icon-box {
+    margin-bottom: 20px;
+    color: var(--accent);
+}
+
+.icon-box .material-icons {
+    font-size: 40px;
+}
+
+.feature-card h3 {
+    margin-bottom: 15px;
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+.feature-card p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* =========================================
+   SECTION 3: WORKFLOW
+   ========================================= */
+.workflow-section {
+    padding: 80px 20px;
+    background: var(--white);
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--text-gray);
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.workflow-steps {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.step {
+    flex: 1;
+    min-width: 250px;
+    padding: 20px;
+}
+
+.step-num {
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(11, 28, 44, 0.05); /* Very subtle primary color */
+    margin-bottom: -20px;
+    position: relative;
+    z-index: 1;
+}
+
+.step h4 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.6);
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+.portal-grid {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.portal-card {
+    background: white;
+    padding: 2.5rem 1.5rem;
+    border-radius: 15px;
+    width: 260px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.portal-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* LARGE EMOJI STYLING */
+.emoji-large {
+    font-size: 4.5rem; 
+    margin-bottom: 1rem;
+    transition: transform 0.3s;
+    line-height: 1;
+    display: block;
+}
+
+.portal-card:hover .emoji-large { transform: scale(1.15); }
+
+.portal-card h3 { margin-bottom: 1rem; color: #333; }
+.portal-card p { color: #666; font-size: 0.95rem; margin-bottom: 2rem; flex-grow: 1; }
+
+.card-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 1rem;
+    color: white;
+}
+
+/* Card Button Colors */
+.admin-card .card-btn { background: #2c3e50; }
+.contractor-card .card-btn { background: #e67e22; }
+.public-card .card-btn { background: #27ae60; }
+
+/* Hover Border Colors */
+.admin-card:hover { border-color: #2c3e50; }
+.contractor-card:hover { border-color: #e67e22; }
+.public-card:hover { border-color: #27ae60; }
+
+
+/* bookmark */
+
+/* --- CENTERED LOGIN PAGES --- */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.login-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    width: 350px;
+    text-align: center;
+    margin: auto; 
+}
+
+.login-container h1, 
+.login-container h2 {
+    margin-top: 0; 
+    font-weight: 700;
+}
+
+.login-container p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.input-group { 
+    margin-bottom: 1.2rem; 
+    text-align: left; 
+}
+
+.input-group label { 
+    display: block; 
+    font-size: 0.9rem; 
+    margin-bottom: 0.5rem; 
+    color: #555; 
+    font-weight: 600; 
+}
+
+.input-group input { 
+    width: 100%; 
+    padding: 0.8rem; 
+    box-sizing: border-box; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+.input-group input:focus { 
+    border-color: #3498db; 
+    outline: none; 
+}
+
+/* --- BUTTONS --- */
+button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
+}
+
+/* Primary Submit Buttons */
+.login-container button:not(.secondary-btn) {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 25px; /* Pill shape */
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+.login-container button:not(.secondary-btn):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #1a252f 0%, #2980b9 100%);
+}
+
+/* Secondary / Text Buttons */
+.secondary-btn { 
+    background: none !important; 
+    color: #3498db !important; 
+    text-decoration: underline; 
+    width: auto; 
+    padding: 0; 
+    box-shadow: none !important; 
+    margin-top: 5px;
+}
+
+.secondary-btn:hover { 
+    color: #2980b9 !important; 
+    transform: none !important; 
+    background: none !important; 
+}
+
+/* Specific button color overrides (from HTML inline styles usually, but good to have classes) */
+
+/* Helper Text */
+#statusMessage { 
+    margin-top: 1rem; 
+    font-weight: bold; 
+    font-size: 0.9rem; 
+}
+
+#errorMsg {
+    color: red; 
+    margin-top: 10px; 
+    font-size: 0.9rem;
+}
+/* --- DASHBOARD LAYOUT --- */
+.dashboard-container { 
+    display: flex; 
+    height: 100vh; 
+    width: 100%;
+}
+
+/* Sidebar Base Styling */
+.sidebar {
+    width: 250px;
+    background: #2c3e50;
+    color: white;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+/* Sidebar Toggle (Collapsed State) */
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar.collapsed .link-text,
+.sidebar.collapsed .logo-text {
+    display: none;
+}
+
+.sidebar.collapsed .nav-item {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: auto;
+    padding: 0;
+    margin-left: auto; 
+}
+
+/* Sidebar Header & Links */
+.sidebar-header {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 1px;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.nav-item {
+    display: block;
+    padding: 12px 18px;
+    color: #bdc3c7;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    border-left: 4px solid transparent;
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.nav-item .icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    width: 25px;
+    display: inline-block;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background-color: #34495e;
+    color: #ffffff;
+}
+
+.nav-item.active {
+    background-color: #1a252f;
+    color: #ffffff;
+    border-left: 4px solid #27ae60; 
+}
+
+/* Logout Button */
+.logout-btn {
+    margin-top: auto;
+    background: #c0392b;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.logout-btn:hover { 
+    background: #e74c3c; 
+}
+
+/* Main Content Area */
+.main-content { 
+    flex: 1; 
+    padding: 40px; 
+    overflow-y: auto; 
+    background-color: #f4f6f8; 
+}
+
+.profile-header, .project-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.project-form {
+    padding: 30px;
+    max-width: 600px;
+}
+
+/* Portal Cards (Used in Dashboards) */
+.portal-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.portal-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+/* --- CONTRACTOR THEME OVERRIDES --- */
+
+/* Sidebar Gradient */
+.sidebar.contractor-mode { 
+    background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
+    box-shadow: 4px 0 15px rgba(230, 126, 34, 0.2);
+}
+
+/* Contractor Sidebar Links */
+.sidebar.contractor-mode .nav-item {
+    color: #fdfefe; /* Lighter text for contrast on orange */
+}
+
+.sidebar.contractor-mode .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Transparent white hover */
+}
+
+.sidebar.contractor-mode .nav-item.active {
+    background-color: white;
+    color: #d35400; /* Dark orange text when active */
+    border-left: 4px solid #c0392b;
+}
+
+.sidebar.contractor-mode .sidebar-header {
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+/* Orange Submit Button */
+.btn-submit-orange {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.btn-submit-orange:hover { 
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #d35400 0%, #a04000 100%);
+}
+
+/* Green Action Button */
+.btn-submit-green {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.btn-submit-green:hover { 
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #219150 0%, #27ae60 100%);
+}
+
+/* Helper Elements */
+.full-width-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.helper-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: block;
+}
+/* Container for the form (optional, for spacing/background) */
+.project-form {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    max-width: 600px; /* Adjust width as needed */
+    margin: 0 auto;
+}
+
+/* Row layout for side-by-side inputs */
+.form-row { 
+    display: flex; 
+    gap: 20px; 
+    margin-bottom: 15px; 
+}
+
+/* Individual input groups */
+.form-group { 
+    flex: 1; 
+    margin-bottom: 15px;
+}
+
+/* Label Styling */
+.form-group label { 
+    display: block; 
+    font-size: 0.9rem; 
+    margin-bottom: 0.5rem; 
+    color: #555; 
+    font-weight: 600; 
+}
+
+/* Input Fields Styling */
+.form-group input { 
+    width: 100%; 
+    padding: 0.8rem; 
+    box-sizing: border-box; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    font-size: 1rem;
+    transition: border 0.3s ease;
+}
+
+.form-group input:focus { 
+    border-color: #3498db; 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+}
+
+/* Submit Button Styling */
+.submit-btn { 
+    width: 100%;
+    padding: 12px;
+    background: #27ae60; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.submit-btn:hover { 
+    background: #2ecc71; 
+    transform: translateY(-2px);
+}
+.form-group textarea {
+    min-height: 120px; /* Sets a taller default starting height */
+    min-width: 525px;
+    resize: vertical;  /* Allows user to resize height, but prevents breaking layout width */
+    font-family: inherit; /* Ensures it uses the same font as inputs */
+}

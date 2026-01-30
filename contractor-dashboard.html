@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Portal | BuildChain</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-container">
+        <div class="sidebar contractor-mode" id="contractorSidebar"> 
+            <div class="sidebar-header">
+                <span class="logo-text">BUILDCHAIN</span>
+                <button id="sidebarToggle" class="toggle-btn">☰</button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button id="navMyProjects" class="nav-item active">
+                    <span class="icon">🏗️</span> <span class="link-text">My Projects</span>
+                </button>
+                <button id="navDailyLog" class="nav-item">
+                    <span class="icon">📝</span> <span class="link-text">Site Progress Log</span>
+                </button>
+                <button id="navMaterialEntry" class="nav-item">
+                    <span class="icon">🚚</span> <span class="link-text">Material Entry</span>
+                </button>
+                <button id="navLabor" class="nav-item">
+                    <span class="icon">👷</span> <span class="link-text">Labor Management</span>
+                </button>
+                <button id="navHistory" class="nav-item">
+                    <span class="icon">📜</span> <span class="link-text">Log History</span>
+                </button>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">
+                <span class="icon">⏻</span> <span class="link-text">Exit Portal</span>
+            </button>
+        </div>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Contractor Dashboard</h1>
+                <p>Welcome, <span id="contractorName" style="color:#e67e22; font-weight:bold;">Loading...</span></p>
+            </header>
+
+            <section id="projectSection">
+                <h2>Assigned Projects</h2>
+                <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                <div id="contractorProjects" class="portal-grid"><p>Loading projects...</p></div>
+            </section>
+
+            <section id="logSection" style="display: none;">
+                <div class="project-form">
+                    <h2>📝 Submit Daily Site Progress</h2>
+                    <form id="dailyLogForm">
+                        <div class="form-group">
+                            <label>Select Project</label>
+                            <select id="logProjectSelect" class="full-width-select" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Work Description</label>
+                            <textarea id="logWork" placeholder="e.g. Completed foundation..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit-orange">Submit Progress Report</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="materialEntrySection" style="display: none;">
+                <div class="project-form">
+                    <h2>🚚 Log Material Delivery</h2>
+                    <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                    
+                    <form id="materialForm">
+                        <div class="form-group">
+                            <label>Select Project</label>
+                            <select id="materialProjectSelect" class="full-width-select" required>
+                                <option>Loading...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Material Name</label>
+                                <input type="text" id="matName" placeholder="e.g. UltraTech Cement" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Supplier Name</label>
+                                <input type="text" id="matSupplier" placeholder="e.g. ABC Supplies" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Quantity & Unit</label>
+                                <input type="text" id="matQuantity" placeholder="e.g. 50 Bags" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Time of Delivery</label>
+                                <input type="datetime-local" id="matTime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Delivery Photo Proof (Link)</label>
+                            <input type="url" id="matPhoto" placeholder="https://drive.google.com/..." required>
+                            <small class="helper-text">Paste a Google Drive or Image link.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Batch ID / Serial No.</label>
+                            <input type="text" id="matBatchID" placeholder="Enter Batch ID manually" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit-green">Verify & Log Delivery</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="laborSection" style="display: none;">
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <h3 style="margin-top:0;"> Select Active Site</h3>
+                    <select id="laborProjectSelect" class="full-width-select">
+                        <option value="">-- Choose Project to Manage Labor --</option>
+                    </select>
+                </div>
+
+                <div class="project-form" style="margin-bottom: 20px;">
+                    <h3 style="margin-top:0;">👷 Register New Laborer</h3>
+                    <form id="addLaborForm" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+                        <div style="flex: 2;">
+                            <label>Full Name</label>
+                            <input type="text" id="laborName" placeholder="Worker Name" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Role</label>
+                            <select id="laborRole" style="padding: 0.8rem; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+                                <option value="General">General</option>
+                                <option value="Mason">Mason</option>
+                                <option value="Electrician">Electrician</option>
+                                <option value="Plumber">Plumber</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1;">
+                            <label>Daily Wage (₹)</label>
+                            <input type="number" id="laborWage" placeholder="500" required>
+                        </div>
+                        <button type="submit" style="background: #2980b9; color: white; padding: 10px 20px; border: none; border-radius: 4px; height: 46px; cursor: pointer; font-weight: bold;">
+                            + Add
+                        </button>
+                    </form>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <h3 style="margin-top:0;">📋 Attendance & Payroll</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #ecf0f1; text-align: left;">
+                                <th style="padding: 10px;">Name</th>
+                                <th style="padding: 10px;">Role</th>
+                                <th style="padding: 10px;">Wage</th>
+                                <th style="padding: 10px;">Days Worked</th>
+                                <th style="padding: 10px;">Total Due</th>
+                                <th style="padding: 10px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="laborListContainer">
+                            <tr><td colspan="6" style="padding:20px; text-align:center;">Select a project to view laborers</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="historySection" style="display: none;">
+                <h2>📜 Your Log History</h2>
+                <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                
+                <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <input type="text" id="searchInput" placeholder="Search by Project, Material, or Work..." 
+                           style="flex: 2; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    
+                    <select id="sortSelect" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                        <option value="newest">Sort: Newest First</option>
+                        <option value="oldest">Sort: Oldest First</option>
+                        <option value="verified">Verified Only</option>
+                        <option value="pending">Pending Only</option>
+                        <option value="material">Material Logs Only</option>
+                    </select>
+                </div>
+
+                <div id="historyListContainer" style="display: flex; flex-direction: column; gap: 15px;">
+                    <p>Loading history...</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module" src="contractor-dashboard.js"></script>
+</body>
+</html>
