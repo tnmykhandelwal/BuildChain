@@ -8,9 +8,6 @@
     
     /* Typography */
     --font-main: 'Montserrat', sans-serif;
-    
-    /* Animation Physics (The "Expensive" Feel) */
-    --transition-smooth: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 * {
@@ -25,6 +22,7 @@ body {
     background-color: var(--off-white);
     line-height: 1.6;
     overflow-x: hidden; /* Prevents horizontal scroll */
+    padding-top: 80px; /* Account for fixed navbar */
 }
 
 a {
@@ -531,6 +529,28 @@ button {
     background: none !important; 
 }
 
+/* Metamask / Wallet Button */
+.metamask-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff8c00 0%, #e67e22 100%);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(230,126,34,0.18);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metamask-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(230,126,34,0.22);
+}
+
 /* Specific button color overrides (from HTML inline styles usually, but good to have classes) */
 
 /* Helper Text */
@@ -858,4 +878,424 @@ button {
     min-width: 525px;
     resize: vertical;  /* Allows user to resize height, but prevents breaking layout width */
     font-family: inherit; /* Ensures it uses the same font as inputs */
+}
+
+/* =========================================
+   PROJECTS SECTION STYLING
+   ========================================= */
+.projects-section {
+    padding: 80px 50px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    position: relative;
+}
+
+.projects-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.projects-section .section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.projects-section h2 {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.projects-section .subtitle {
+    font-size: 16px;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+.projects-section .underline {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #2ecc71);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+/* Projects Grid */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Project Card Styling */
+.project-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    cursor: pointer;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.project-card:hover::before {
+    left: 100%;
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(240, 245, 250, 1) 100%);
+}
+
+.project-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 15px;
+    transition: color 0.3s;
+}
+
+.project-card:hover h3 {
+    color: var(--accent);
+}
+
+.project-card p {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.project-card p strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Modal Styling */
+.modal {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close:hover {
+    color: var(--accent);
+    transform: scale(1.2);
+    transition: all 0.2s;
+}
+
+#projectDetailsContent h2 {
+    color: var(--primary);
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+#projectDetailsContent h3 {
+    color: var(--accent);
+    font-size: 18px;
+    margin: 20px 0 15px 0;
+}
+
+#projectDetailsContent h4 {
+    color: var(--primary);
+    font-size: 15px;
+    margin: 10px 0 8px 0;
+}
+
+#projectDetailsContent p {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+#projectDetailsContent div[style*="background-color: #f5f5f5"],
+#projectDetailsContent div[style*="background-color: #f9f9f9"] {
+    border-left: 4px solid var(--accent);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .projects-section {
+        padding: 60px 30px;
+    }
+
+    .projects-section h2 {
+        font-size: 32px;
+    }
+
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .project-card {
+        padding: 20px;
+    }
+
+    .modal-content {
+        width: 95% !important;
+        margin: 10% auto !important;
+        padding: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .projects-section {
+        padding: 40px 15px;
+    }
+
+    .projects-section h2 {
+        font-size: 24px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .project-card {
+        padding: 15px;
+    }
+
+    #projectDetailsContent {
+        font-size: 13px;
+    }
+}
+
+/* =========================================
+   PROJECT DETAILS SECTION STYLING
+   ========================================= */
+.project-details-section {
+    padding: 80px 50px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+    margin-top: 40px;
+}
+
+.project-details-section .container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.close-details-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.close-details-btn:hover {
+    background: #1e4463;
+    transform: translateX(-5px);
+    box-shadow: 0 5px 15px rgba(44, 82, 130, 0.3);
+}
+
+.project-details-content h2 {
+    font-size: 32px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.project-details-content h3 {
+    font-size: 18px;
+    color: var(--accent);
+    margin: 20px 0 15px 0;
+}
+
+.project-details-content h4 {
+    font-size: 15px;
+    color: var(--primary);
+    margin: 10px 0 8px 0;
+}
+
+.project-details-content p {
+    color: var(--text-gray);
+    font-size: 14px;
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+/* Materials Table Styling */
+.materials-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.materials-table thead {
+    background: linear-gradient(135deg, var(--accent), #3a6a9f);
+    color: white;
+}
+
+.materials-table th {
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.materials-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s ease;
+}
+
+.materials-table tbody tr:hover {
+    background: #f9fbfc;
+}
+
+.materials-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.materials-table td {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.materials-table td strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Material Filter Controls */
+input[id^="materialSearchInput-"] {
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease;
+}
+
+input[id^="materialSearchInput-"]:focus {
+    outline: none;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 8px rgba(44, 82, 130, 0.2) !important;
+}
+
+select[id^="materialSortSelect-"] {
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    background: white !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+}
+
+select[id^="materialSortSelect-"]:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 2px 8px rgba(44, 82, 130, 0.1) !important;
+}
+
+/* Budget and Materials Grid Layout */
+@media (min-width: 1024px) {
+    .project-details-content > div[style*="display: grid"] {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+
+@media (max-width: 1023px) {
+    .project-details-content > div[style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Responsive Design for Details Section */
+@media (max-width: 768px) {
+    .project-details-section {
+        padding: 60px 30px;
+    }
+
+    .project-details-content h2 {
+        font-size: 24px;
+    }
+
+    .materials-table th,
+    .materials-table td {
+        padding: 12px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-details-section {
+        padding: 40px 15px;
+    }
+
+    .project-details-content h2 {
+        font-size: 20px;
+    }
+
+    .close-details-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .materials-table {
+        font-size: 12px;
+    }
+
+    .materials-table th,
+    .materials-table td {
+        padding: 10px 8px;
+    }
+
+    .materials-table thead {
+        font-size: 11px;
+    }
 }

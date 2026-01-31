@@ -6,16 +6,17 @@
     <title>BuildChain | Construction Transparency</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     
     <nav class="navbar">
-        <div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div>
+        <a href="index.html" style="text-decoration: none; color: inherit;"><div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div></a>
         <ul class="nav-links">
-            <li><a href="#mission">Our Mission</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#workflow">How It Works</a></li>
-            <li><a href="#portals" class="btn-main">Get Started</a></li>
+            <li><a href="#Projects">Projects</a></li>
+            <li><a href="#laborSection" id="navLaborActivity" style="cursor: pointer;">Labor Activity</a></li>
+            <li><a href="#verifierSection" id="navVerify" style="cursor: pointer; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Verify</a></li>
+            <li><a href="login.html" class="btn-main">Login</a></li>
         </ul>
     </nav>
 
@@ -84,7 +85,7 @@
                         <span class="material-icons">insights</span>
                     </div>
                     <h3>Visual Transparency</h3>
-                    <p>A public dashboard powered by Chart.js offers visual analytics on budget vs. progress. Features include real-time map views of sites, quality check reports, and Metamask authentication for secure admin access.</p>
+                    <p>A public dashboard powered by Chart.js offers visual analytics on budget vs. progress. Features include quality check reports, and Metamask authentication for secure admin access.</p>
                 </div>
             </div>
         </div>
@@ -125,46 +126,76 @@
             </div>
         </div>
     </section>
-
-    <section class="login-selection" id="portals">
-        <div class="section-header">
-            <h2>Select Your Portal</h2>
-            <p>Access the system based on your role</p>
-            <div class="underline"></div>
-        </div>
-
-        <div class="portal-grid">
-            
-            <div class="portal-card admin-card" onclick="window.location.href='login-admin.html'"> 
-                <div class="emoji-large">🛡️</div>
-                <h3>Admin</h3>
-                <p>Manage projects, approve milestones, audit budgets.</p>
-                <button class="card-btn">Login as Admin</button>
+    
+    <section id="Projects" class="projects-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Projects</h2>
+                <p class="subtitle">View all active construction projects</p>
             </div>
-
-            <div class="portal-card contractor-card" onclick="window.location.href='login-contractor.html'">
-                <div class="emoji-large">👷</div>
-                <h3>Contractor</h3>
-                <p>Log materials, upload photos, manage labor.</p>
-                <button class="card-btn">Login as Contractor</button>
+            <div class="projects-grid" id="projectsGrid">
+                <p>Loading projects...</p>
             </div>
-
-            <div class="portal-card public-card" onclick="window.location.href='login-public.html'">
-                <div class="emoji-large">🌍</div>
-                <h3>Public</h3>
-                <p>View progress, verify quality, check budgets.</p>
-                <button class="card-btn">View Progress</button>
-            </div>
-
         </div>
     </section>
 
-    <footer>
+    <!-- Project Details Section -->
+    <section id="projectDetailsSection" class="project-details-section" style="display: none;">
         <div class="container">
-            <p>WOC 8.0 BuildChain Project. Decentralizing Construction.</p>
+            <button id="closeDetailsBtn" class="close-details-btn">← Back to Projects</button>
+            <div id="projectDetailsContent" class="project-details-content">
+                <!-- Project details will be populated here -->
+            </div>
         </div>
-    </footer>
+    </section>
 
+    <!-- Labor Activity Section (Global) -->
+    <section id="laborSection" class="project-details-section" style="display: none;">
+        <div class="container">
+            <button id="closeLaborBtn" class="close-details-btn">← Back</button>
+            <h2 style="color: var(--primary); margin: 20px 0 10px 0;">👷 Labor Activity & Workforce Analytics</h2>
+            <hr style="margin: 20px 0; border: 1px solid #eee;">
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <label><strong>Select a Project to View Labor Data:</strong></label>
+                <select id="laborProjectSelect" style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="">-- Loading Projects --</option>
+                </select>
+            </div>
+
+            <!-- Labor Chart -->
+            <div id="laborChartSection" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: none;">
+                <h3 style="margin-top: 0; color: var(--primary);">📈 7-Day Work Intensity</h3>
+                <p style="font-size: 0.9rem; color: #666;">This chart displays the number of active workers on-site for the past week.</p>
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="laborChart"></canvas>
+                </div>
+            </div>
+
+            <div id="laborStatsContainer" style="background: white; padding: 20px; border-radius: 8px;">
+                <p>Select a project to view labor statistics and workforce details.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Section -->
+    <section id="verifierSection" class="project-details-section" style="display: none;">
+        <div class="container">
+            <button id="closeVerifyBtn" class="close-details-btn">← Back</button>
+            <h2 style="color: var(--primary); margin: 20px 0 10px 0;">🔍 Blockchain Hash Verification</h2>
+            <hr style="margin: 20px 0; border: 1px solid #eee;">
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid #3498db;">
+                <p style="margin-bottom: 15px;">Paste a hash from a physical receipt or report to verify its authenticity on the BuildChain ledger.</p>
+                <input type="text" id="hashInput" placeholder="Paste Hash String Here (e.g., 8a7c...)" 
+                       style="width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #3498db; border-radius: 6px; font-size: 14px;">
+                <button id="verifyHashBtn" style="background: #3498db; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">
+                    Verify Record
+                </button>
+                <div id="verificationResult" style="margin-top: 20px; font-weight: bold; padding: 15px; border-radius: 6px; display: none;"></div>
+            </div>
+        </div>
+    </section>
 </body>
-<script src="landing.js"></script>
+<script type="module" src="index.js"></script>
 </html>

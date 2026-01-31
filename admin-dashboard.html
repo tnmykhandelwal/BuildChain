@@ -8,34 +8,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+    <nav class="navbar">
+        <a href="index.html" style="text-decoration: none; color: inherit;"><div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div></a>
+        <ul class="nav-links">
+            <li><a href="#" id="navCreate">New Project</a></li>
+            <li><a href="#" id="navView">Project Registry</a></li>
+            <li><a href="#" id="navMilestones">Set Milestones</a></li>
+            <li><a href="#" id="navLogs">Contractor Logs</a></li>
+            <li><button id="logoutBtn" class="btn-main" style="padding:8px 14px;">Logout</button></li>
+        </ul>
+    </nav>
     <div class="dashboard-container">
-        <div class="sidebar" id="adminSidebar">
-          <div class="sidebar-header">
-              <span class="logo-text">BUILDCHAIN</span>
-              <button id="sidebarToggle" class="toggle-btn">☰</button>
-          </div>
-          
-          <nav class="sidebar-nav">
-              <a href="#" id="navCreate" class="nav-item active">
-                  <span class="icon">➕</span> <span class="link-text">New Project</span>
-              </a>
-              <a href="#" id="navView" class="nav-item">
-                  <span class="icon">📂</span> <span class="link-text">Project Registry</span>
-              </a>
-              <button id="navMilestones" class="nav-item">
-                  <span class="icon">🚩</span> <span class="link-text">Set Milestones</span>
-              </button>
-              <button id="navLogs" class="nav-item">
-                  <span class="icon">📋</span> <span class="link-text">Contractor Logs</span>
-              </button>
-          </nav>
-          
-          <button id="logoutBtn" class="logout-btn">
-              <span class="icon">⏻</span> <span class="link-text">Logout</span>
-          </button>
-        </div>
-
         <div class="main-content">
             
             <div class="profile-header">
@@ -88,6 +71,15 @@
                 <div id="logsSection" style="display: none;">
                     <h2 style="margin-top:0;">Daily Site Logs</h2>
                     <hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: center;">
+                        <input type="text" id="logsSearchInput" placeholder="Search by project, type, supplier..." style="padding:8px; border:1px solid #ccc; border-radius:6px; min-width:220px;">
+                        <select id="logsSortSelect" style="padding:8px; border:1px solid #ccc; border-radius:6px;">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="verified">Verified First</option>
+                            <option value="project">Project A→Z</option>
+                        </select>
+                    </div>
                     <div id="logsContainer" style="display: flex; flex-direction: column; gap: 15px;">
                         <p>Loading logs...</p>
                     </div>
@@ -133,6 +125,11 @@
                     <div class="form-group">
                         <label>Upload Documents</label>
                         <input type="text" id="pDocument" placeholder="Drive link of document/Blueprint" >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Security PIN (4-6 digits)</label>
+                        <input type="password" id="pPIN" placeholder="Enter security PIN" pattern="[0-9]{4,6}" maxlength="6" required>
                     </div>
 
                     <button type="submit" class="submit-btn">Add Project </button>

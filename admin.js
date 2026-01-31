@@ -31,7 +31,13 @@ const milestoneSelect = document.getElementById('milestoneProjectSelect');
 // --- AUTHENTICATION ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        if (adminEmailSpan) adminEmailSpan.innerText = user.email;
+        // Check if logged in via MetaMask
+        const walletAddress = localStorage.getItem('adminWalletAddress');
+        if (walletAddress) {
+            if (adminEmailSpan) adminEmailSpan.innerText = walletAddress;
+        } else {
+            if (adminEmailSpan) adminEmailSpan.innerText = user.email;
+        }
     } else {
         window.location.href = "login-admin.html";
     }
@@ -147,14 +153,30 @@ function attachDeleteListeners() {
     deleteButtons.forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const id = e.target.getAttribute('data-id');
-            if (confirm("Delete this project?")) {
-                try {
-                    await deleteDoc(doc(db, "projects", id));
-                    const card = document.getElementById(`project-card-${id}`);
-                    if (card) card.remove(); else loadProjects();
-                } catch (error) {
-                    alert("Error: " + error.message);
-                }
+            const projectDoc = await getDoc(doc(db, "projects", id));
+            const projectData = projectDoc.data();
+            const storedPIN = projectData?.securityPIN;
+
+            if (!storedPIN) {
+                alert("This project has no security PIN set.");
+                return;
+            }
+
+            if (!confirm("Delete this project?")) return;
+            
+            const enteredPIN = prompt("Enter the security PIN to confirm deletion:");
+            if (enteredPIN !== storedPIN) {
+                alert("Incorrect PIN. Deletion cancelled.");
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, "projects", id));
+                const card = document.getElementById(`project-card-${id}`);
+                if (card) card.remove(); else loadProjects();
+                alert("Project deleted successfully.");
+            } catch (error) {
+                alert("Error: " + error.message);
             }
         });
     });
@@ -188,73 +210,179 @@ async function loadLogs() {
     if (!logsContainer) return;
     logsContainer.innerHTML = "<p>Fetching logs...</p>";
     try {
+        // Load project titles to map projectId -> title
         const projectsSnap = await getDocs(collection(db, "projects"));
         const projectMap = {};
         projectsSnap.forEach(doc => { projectMap[doc.id] = doc.data().title; });
 
+        // Expose projectMap globally for render helpers
+        window.projectMap = projectMap;
+
+        // Load logs ordered by timestamp desc
         const q = query(collection(db, "logs"), orderBy("timestamp", "desc"));
         const logsSnap = await getDocs(q);
 
-        logsContainer.innerHTML = "";
         if (logsSnap.empty) {
             logsContainer.innerHTML = "<p>No logs found.</p>";
+            window.adminLogsData = [];
+            window.adminLogsImages = {};
             return;
         }
 
-        logsSnap.forEach(docSnap => {
-            const data = docSnap.data();
-            const dateStr = data.timestamp && data.timestamp.toDate 
-                ? data.timestamp.toDate().toLocaleString() 
-                : "Unknown";
-            const projectTitle = projectMap[data.projectId] || "Unknown Project";
+        // Build logs data array
+        const logsData = logsSnap.docs.map(d => ({ id: d.id, data: d.data() }));
 
-            let statusBadge = "";
-            let actionButton = "";
-
-            if (data.verified) {
-                statusBadge = `<span style="background:#27ae60; color:white; padding:3px 8px; border-radius:4px; font-size:0.8rem;">✔ On Blockchain</span>`;
-            } else {
-                statusBadge = `<span style="background:#f39c12; color:white; padding:3px 8px; border-radius:4px; font-size:0.8rem;">⏳ Pending Verification</span>`;
-                actionButton = `
-                    <button class="verify-btn" data-id="${docSnap.id}" data-pid="${data.projectId}"
-                        style="margin-top:10px; background:#2980b9; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">
-                        ✅ Verify & Chain
-                    </button>
-                `;
+        // Preload images (proofs) concurrently using fetch + promises
+        const imagePromises = logsData.map(async (log) => {
+            const photoLink = log.data.photoLink || log.data.photoURL || null;
+            if (!photoLink) return { id: log.id, url: null };
+            try {
+                const resp = await fetch(photoLink);
+                if (!resp.ok) return { id: log.id, url: null };
+                const blob = await resp.blob();
+                const url = URL.createObjectURL(blob);
+                return { id: log.id, url };
+            } catch (e) {
+                console.warn('Image fetch failed for', photoLink, e);
+                return { id: log.id, url: null };
             }
-
-            let details = "";
-            if (data.type === "Material Delivery") {
-                details = `
-                    <p><strong>📦 Material:</strong> ${data.materialName} (${data.quantity})</p>
-                    <p><strong>🏭 Supplier:</strong> ${data.supplier}</p>
-                    <p><strong>🔢 Batch ID:</strong> ${data.batchID || 'N/A'}</p>
-                    <p><strong>📸 Proof:</strong> ${data.photoLink ? `<a href="${data.photoLink}" target="_blank">View Image</a>` : 'None'}</p>
-                `;
-            } else {
-                details = `<p><strong>🛠️ Work:</strong> ${data.workDescription || data.workDone}</p>`;
-            }
-
-            const card = `
-                <div style="background: white; padding: 15px; border-left: 5px solid ${data.verified ? '#27ae60' : '#f39c12'}; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between;">
-                        <h4 style="margin:0;">${projectTitle}</h4>
-                        <small>${dateStr}</small>
-                    </div>
-                    <div style="margin:5px 0;">${statusBadge}</div>
-                    ${details}
-                    <p style="font-size:0.8rem; color:#666;">By: ${data.submittedBy}</p>
-                    ${data.verified ? `<p style="font-size:0.7rem; color:#999;">⛓ Hash: ${data.hash.substring(0,20)}...</p>` : ''}
-                    ${actionButton}
-                </div>
-            `;
-            logsContainer.insertAdjacentHTML('beforeend', card);
         });
-        attachVerifyListeners();
+
+        const imageResults = await Promise.all(imagePromises);
+        const imagesMap = {};
+        imageResults.forEach(r => { if (r && r.id) imagesMap[r.id] = r.url; });
+
+        // Store globally for filtering/sorting
+        window.adminLogsData = logsData;
+        window.adminLogsImages = imagesMap;
+
+        // Setup search/sort handlers
+        const searchInput = document.getElementById('logsSearchInput');
+        const sortSelect = document.getElementById('logsSortSelect');
+        if (searchInput) searchInput.addEventListener('input', () => renderAdminLogs());
+        if (sortSelect) sortSelect.addEventListener('change', () => renderAdminLogs());
+
+        // Initial render
+        renderAdminLogs();
+
     } catch (error) {
-        console.error(error);
+        console.error('Error in loadLogs:', error);
         logsContainer.innerHTML = "<p>Error loading logs.</p>";
     }
+}
+
+function renderAdminLogs() {
+    const data = window.adminLogsData || [];
+    const images = window.adminLogsImages || {};
+    const searchTerm = (document.getElementById('logsSearchInput')?.value || '').toLowerCase();
+    const sortBy = document.getElementById('logsSortSelect')?.value || 'newest';
+
+    let filtered = data.filter(item => {
+        const d = item.data;
+        const projectTitle = (window.projectMap && window.projectMap[d.projectId]) || '';
+        const text = [projectTitle, d.type, d.materialName, d.supplier, d.submittedBy, d.workDescription, d.batchID].filter(Boolean).join(' ').toLowerCase();
+        return text.includes(searchTerm);
+    });
+
+    // Sorting
+    filtered.sort((a, b) => {
+        const da = a.data;
+        const db = b.data;
+        const ta = da.timestamp?.toDate?.() ? da.timestamp.toDate() : new Date(0);
+        const tb = db.timestamp?.toDate?.() ? db.timestamp.toDate() : new Date(0);
+        if (sortBy === 'newest') return tb - ta;
+        if (sortBy === 'oldest') return ta - tb;
+        if (sortBy === 'verified') return (b.data.verified ? 1 : 0) - (a.data.verified ? 1 : 0);
+        if (sortBy === 'project') {
+            const pa = (window.projectMap && window.projectMap[da.projectId]) || '';
+            const pb = (window.projectMap && window.projectMap[db.projectId]) || '';
+            return pa.localeCompare(pb);
+        }
+        return 0;
+    });
+
+    // Render
+    logsContainer.innerHTML = '';
+    if (filtered.length === 0) {
+        logsContainer.innerHTML = '<p>No logs match your search.</p>';
+        return;
+    }
+
+    // Build cards
+    filtered.forEach(item => {
+        const id = item.id;
+        const d = item.data;
+        const projectTitle = (window.projectMap && window.projectMap[d.projectId]) || '';
+        const dateStr = d.timestamp && d.timestamp.toDate ? d.timestamp.toDate().toLocaleString() : 'Unknown';
+
+        let statusBadge = d.verified
+            ? `<span style="background:#27ae60; color:white; padding:3px 8px; border-radius:4px; font-size:0.8rem;">✔ On Blockchain</span>`
+            : `<span style="background:#f39c12; color:white; padding:3px 8px; border-radius:4px; font-size:0.8rem;">⏳ Pending Verification</span>`;
+
+        let actionButton = '';
+        if (!d.verified) {
+            actionButton = `<button class="verify-btn" data-id="${id}" data-pid="${d.projectId}" style="margin-top:10px; background:#2980b9; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">✅ Verify & Chain</button>`;
+        }
+
+        let details = '';
+        if (d.type === 'Material Delivery') {
+            details = `
+                <p><strong>📦 Material:</strong> ${d.materialName || 'N/A'} (${d.quantity || 'N/A'})</p>
+                <p><strong>🏭 Supplier:</strong> ${d.supplier || 'N/A'}</p>
+                <p><strong>🔢 Batch ID:</strong> ${d.batchID || 'N/A'}</p>
+            `;
+            const imgUrl = images[id];
+            if (imgUrl) {
+                details += `<div><strong>📸 Proof:</strong><br><img src="${imgUrl}" alt="proof" style="max-width:300px; margin-top:8px; border-radius:6px; border:1px solid #eee;"></div>`;
+            } else {
+                details += `<p><strong>📸 Proof:</strong> ${d.photoLink ? `<a href="${d.photoLink}" target="_blank">Open</a>` : 'None'}</p>`;
+            }
+        } else {
+            details = `<p><strong>🛠️ Work:</strong> ${d.workDescription || d.workDone || 'N/A'}</p>`;
+        }
+
+        const hashDisplay = d.verified && d.hash ?
+            `<p style="font-size:0.75rem; color:#333; word-break:break-all; font-family: 'Courier New', monospace; margin-top:8px;">⛓ Hash: <span class="log-hash" data-hash="${d.hash}">${d.hash}</span></p>`
+            : (d.verified ? `<p style="font-size:0.7rem; color:#999;">⛓ Hash: N/A</p>` : '');
+
+        const card = `
+            <div style="background: white; padding: 15px; border-left: 5px solid ${d.verified ? '#27ae60' : '#f39c12'}; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <h4 style="margin:0;">${projectTitle}</h4>
+                    <small>${dateStr}</small>
+                </div>
+                <div style="margin:5px 0;">${statusBadge}</div>
+                ${details}
+                <p style="font-size:0.8rem; color:#666;">By: ${d.submittedBy || 'Unknown'}</p>
+                ${hashDisplay}
+                ${actionButton}
+            </div>
+        `;
+        logsContainer.insertAdjacentHTML('beforeend', card);
+    });
+
+    // Re-attach verify listeners after render
+    attachVerifyListeners();
+
+    // Allow clicking the hash text to copy (no separate button)
+    const hashSpans = logsContainer.querySelectorAll('.log-hash');
+    hashSpans.forEach(span => {
+        span.style.cursor = 'pointer';
+        span.title = 'Click to copy full hash';
+        span.addEventListener('click', async (e) => {
+            const h = span.getAttribute('data-hash');
+            if (!h) return;
+            try {
+                await navigator.clipboard.writeText(h);
+                // small visual feedback by briefly changing color
+                const orig = span.style.color;
+                span.style.color = '#27ae60';
+                setTimeout(() => { span.style.color = orig; }, 1000);
+            } catch (err) {
+                console.error('Clipboard write failed', err);
+            }
+        });
+    });
 }
 
 function attachVerifyListeners() {
@@ -319,7 +447,8 @@ if (createProjectFormElement) {
                 createdAt: new Date(),
                 blueprint: getVal('pDocument'),
                 status: "Active",
-                currentStage: "Initiated"
+                currentStage: "Initiated",
+                securityPIN: getVal('pPIN')
             });
             alert("Project Assigned!");
             createProjectFormElement.reset();
@@ -347,6 +476,23 @@ if (milestoneForm) {
         const pid = milestoneSelect.value;
         const stage = document.querySelector('input[name="stage"]:checked')?.value;
         if (!pid || !stage) return alert("Select all fields");
+        
+        // Fetch project to get PIN
+        const projectDoc = await getDoc(doc(db, "projects", pid));
+        const projectData = projectDoc.data();
+        const storedPIN = projectData?.securityPIN;
+
+        if (!storedPIN) {
+            alert("This project has no security PIN set.");
+            return;
+        }
+
+        const enteredPIN = prompt("Enter the security PIN to update milestone:");
+        if (enteredPIN !== storedPIN) {
+            alert("Incorrect PIN. Update cancelled.");
+            return;
+        }
+
         try {
             await updateDoc(doc(db, "projects", pid), { currentStage: stage });
             alert("Milestone Updated!");

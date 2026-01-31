@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildChain</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" style="text-decoration: none; color: inherit;"><div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div></a>
+        <ul class="nav-links">
+            <li><a href="index.html#Projects">Projects</a></li>
+            <li><a href="index.html#laborSection" id="navLaborActivity" style="cursor: pointer;">Labor Activity</a></li>
+            <li><a href="index.html#verifierSection" id="navVerify" style="cursor: pointer; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Verify</a></li>
+            <li><a href="login.html" class="btn-main">Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="login-selection" id="portals">
+        <div class="section-header">
+            <h2>Select Your Portal</h2>
+            <p>Access the system based on your role</p>
+            <div class="underline"></div>
+        </div>
+
+        <div class="portal-grid">
+            
+            <div class="portal-card admin-card" onclick="window.location.href='login-admin.html'"> 
+                <div class="emoji-large">🛡️</div>
+                <h3>Admin</h3>
+                <p>Manage projects, approve milestones, audit budgets.</p>
+                <button class="card-btn">Login as Admin</button>
+            </div>
+
+            <div class="portal-card contractor-card" onclick="window.location.href='login-contractor.html'">
+                <div class="emoji-large">👷</div>
+                <h3>Contractor</h3>
+                <p>Log materials, upload photos, manage labor.</p>
+                <button class="card-btn">Login as Contractor</button>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>

@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuildChain - Login</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="login-body">
-
+    <nav class="navbar">
+        <a href="index.html" style="text-decoration: none; color: inherit;"><div class="logo"> ⛓️ <strong>BUILD</strong><em>CHAIN</em> <span class="dot">.</span></div></a>
+        <ul class="nav-links">
+            <li><a href="index.html#Projects">Projects</a></li>
+            <li><a href="index.html#laborSection" id="navLaborActivity" style="cursor: pointer;">Labor Activity</a></li>
+            <li><a href="index.html#verifierSection" id="navVerify" style="cursor: pointer; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Verify</a></li>
+            <li><a href="login.html" class="btn-main">Login</a></li>
+        </ul>
+    </nav>
     <div class="login-container">
         <h1>BuildChain- Admin Access 🏗️</h1>
         <p>Login to Admin Portal</p>
@@ -24,11 +33,14 @@
             </div>
 
             <button type="submit" id="loginBtn">Login</button>
-            <p id="statusMessage"></p>
         </form>
 
-        <div class="register-link">
-            <p><button id="signUpBtn" class="secondary-btn" onclick="window.location.href='signup-admin.html'">Create Account</button></p>
+        <div style=" text-align:center;">
+            <button type="button" id="metamaskLoginBtn" class="metamask-btn">🦊 Login with MetaMask</button>
+            <p id="statusMessage" style="margin-top:8px; font-weight:600; color:#0b1c2c;"></p>
+        </div>
+        <div class="register-link" style="margin-top:12px; text-align:center;">
+            <p>New here? <button id="signUpBtn" class="secondary-btn" onclick="window.location.href='signup-admin.html'">Create Account</button></p>
         </div>
     </div>
 
