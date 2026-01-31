@@ -390,11 +390,13 @@ if(addLaborForm) {
 if(dailyLogForm) {
     dailyLogForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        // Get email from auth or from localStorage (for MetaMask users)
+        const submitterEmail = auth.currentUser.email || localStorage.getItem('contractorEmail') || 'Unknown';
         const logData = {
             projectId: logProjectSelect.value,
             workDescription: document.getElementById('logWork').value,
             type: "Site Progress",
-            submittedBy: auth.currentUser.email,
+            submittedBy: submitterEmail,
             timestamp: new Date(),
             verified: false,
             status: "Pending Review"
@@ -406,6 +408,8 @@ if(dailyLogForm) {
 if(materialForm) {
     materialForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        // Get email from auth or from localStorage (for MetaMask users)
+        const submitterEmail = auth.currentUser.email || localStorage.getItem('contractorEmail') || 'Unknown';
         const materialData = {
             projectId: materialProjectSelect.value,
             name: document.getElementById('matName').value,
@@ -416,13 +420,13 @@ if(materialForm) {
             photoLink: document.getElementById('matPhoto').value,
             batchID: document.getElementById('matBatchID').value,
             type: "Material Delivery",
-            submittedBy: auth.currentUser.email,
+            submittedBy: submitterEmail,
             timestamp: new Date(),
             verified: false,
             status: "Pending Review"
         };
         try { 
-            await addDoc(collection(db, "materials"), materialData); 
+            await addDoc(collection(db, "logs"), materialData); 
             alert("Material logged successfully!"); 
             materialForm.reset(); 
         } catch (e) { 

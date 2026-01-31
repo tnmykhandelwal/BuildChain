@@ -392,9 +392,33 @@ function attachVerifyListeners() {
             const logId = e.target.getAttribute('data-id');
             const projectId = e.target.getAttribute('data-pid');
             if(!confirm("Verify this work? This will permanently add it to the blockchain ledger.")) return;
-            e.target.innerText = "Verifying...";
-            e.target.disabled = true;
+            
+            // Fetch project to get security PIN
             try {
+                const projectDoc = await getDoc(doc(db, "projects", projectId));
+                const projectData = projectDoc.data();
+                const storedPIN = projectData?.securityPIN;
+
+                if (!storedPIN) {
+                    alert("This project has no security PIN set.");
+                    return;
+                }
+
+                // Prompt admin for security PIN
+                const enteredPIN = prompt("Enter the project security PIN to verify and add log to blockchain:");
+                if (enteredPIN === null) {
+                    // User clicked Cancel
+                    return;
+                }
+                if (enteredPIN !== storedPIN) {
+                    alert("Incorrect PIN. Verification cancelled.");
+                    return;
+                }
+
+                // PIN is correct, proceed with verification
+                e.target.innerText = "Verifying...";
+                e.target.disabled = true;
+                
                 const logRef = doc(db, "logs", logId);
                 const logSnap = await getDoc(logRef);
                 const logData = logSnap.data();
