@@ -268,11 +268,11 @@ ul {
     border-bottom: 3px solid transparent;
 }
 
-.feature-card:hover {
+/* .feature-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     border-bottom: 3px solid var(--accent);
-}
+} */
 
 .icon-box {
     margin-bottom: 20px;
@@ -374,10 +374,10 @@ footer {
     text-align: center;
 }
 
-.portal-card:hover {
+/* .portal-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-}
+} */
 
 /* LARGE EMOJI STYLING */
 .emoji-large {
@@ -413,7 +413,6 @@ footer {
 /* Hover Border Colors */
 .admin-card:hover { border-color: #2c3e50; }
 .contractor-card:hover { border-color: #e67e22; }
-.public-card:hover { border-color: #27ae60; }
 
 
 /* bookmark */
@@ -572,63 +571,6 @@ button {
     width: 100%;
 }
 
-/* Sidebar Base Styling */
-.sidebar {
-    width: 250px;
-    background: #2c3e50;
-    color: white;
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    transition: width 0.3s ease;
-    overflow: hidden;
-}
-
-/* Sidebar Toggle (Collapsed State) */
-.sidebar.collapsed {
-    width: 70px;
-}
-
-.sidebar.collapsed .link-text,
-.sidebar.collapsed .logo-text {
-    display: none;
-}
-
-.sidebar.collapsed .nav-item {
-    text-align: center;
-    padding: 15px 0;
-}
-
-.sidebar.collapsed .sidebar-header {
-    justify-content: center;
-}
-
-.toggle-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    width: auto;
-    padding: 0;
-    margin-left: auto; 
-}
-
-/* Sidebar Header & Links */
-.sidebar-header {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: 1px;
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    border-bottom: 2px solid #34495e;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    white-space: nowrap;
-}
 
 .nav-item {
     display: block;
@@ -722,31 +664,6 @@ button {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 /* --- CONTRACTOR THEME OVERRIDES --- */
-
-/* Sidebar Gradient */
-.sidebar.contractor-mode { 
-    background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
-    box-shadow: 4px 0 15px rgba(230, 126, 34, 0.2);
-}
-
-/* Contractor Sidebar Links */
-.sidebar.contractor-mode .nav-item {
-    color: #fdfefe; /* Lighter text for contrast on orange */
-}
-
-.sidebar.contractor-mode .nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Transparent white hover */
-}
-
-.sidebar.contractor-mode .nav-item.active {
-    background-color: white;
-    color: #d35400; /* Dark orange text when active */
-    border-left: 4px solid #c0392b;
-}
-
-.sidebar.contractor-mode .sidebar-header {
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-}
 
 /* Orange Submit Button */
 .btn-submit-orange {
