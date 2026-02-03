@@ -1,11 +1,7 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-// =====================================================
-// LANDING PAGE ANIMATIONS
-// =====================================================
 
-// Typewriter Effect
 const typewriterElement = document.getElementById('typewriter');
 const phrases = [
     'Where Trust Meets Transparency',
@@ -42,12 +38,10 @@ function typeWriter() {
     }
 }
 
-// Initialize typewriter on page load
 if (typewriterElement) {
     typeWriter();
 }
 
-// Image Slideshow
 function startSlideshow() {
     const slides = document.querySelectorAll('.slide');
     if(slides.length === 0) return;
@@ -62,16 +56,11 @@ function startSlideshow() {
 
 startSlideshow();
 
-// =====================================================
-// PROJECTS PAGE FUNCTIONALITY
-// =====================================================
-
 const projectsGrid = document.getElementById('projectsGrid');
 const projectDetailsSection = document.getElementById('projectDetailsSection');
 const closeDetailsBtn = document.getElementById('closeDetailsBtn');
 const projectDetailsContent = document.getElementById('projectDetailsContent');
 
-// Load all projects
 async function loadAllProjects() {
     try {
         const snap = await getDocs(collection(db, "projects"));
@@ -115,14 +104,12 @@ async function loadAllProjects() {
     }
 }
 
-// Show project details
 async function showProjectDetails(projectId, projectData) {
     projectDetailsSection.style.display = 'block';
     projectDetailsContent.innerHTML = '<p>Loading project details...</p>';
     projectDetailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     try {
-        // --- 1. DETAILS HTML ---
         let html = `
             <div style="background: linear-gradient(135deg, #0b1c2c, #2c5282); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
                 <h2 style="margin: 0 0 10px 0; color: #ffffff;">${projectData.title}</h2>
@@ -152,13 +139,10 @@ async function showProjectDetails(projectId, projectData) {
             </div>
         `;
 
-        // --- 2. UPDATED MILESTONE TRACKER ---
         const stages = ["Foundation", "Structure", "Flooring", "Roofing", "Completed"];
         const currentStage = projectData.currentStage || "Initiated";
         const currentIndex = stages.indexOf(currentStage);
         
-        // Calculate progress percentage for the green line
-        // There are 4 segments between 5 points.
         const progressPercent = (currentIndex / (stages.length - 1)) * 100;
         
         html += `
@@ -177,7 +161,6 @@ async function showProjectDetails(projectId, projectData) {
              const isCompleted = idx <= currentIndex;
              const isCurrent = idx === currentIndex;
              
-             // Dynamic Colors
              const bgColor = isCompleted ? '#27ae60' : 'white';
              const borderColor = isCompleted ? '#27ae60' : '#bdc3c7';
              const textColor = isCompleted ? 'white' : '#bdc3c7';
@@ -199,7 +182,6 @@ async function showProjectDetails(projectId, projectData) {
                 </div>
             </div>`;
 
-        // --- 3. FETCH LOGS (FROM PREVIOUS FIX) ---
         const q = query(collection(db, "logs"), where("projectId", "==", projectId));
         const projectLogsSnap = await getDocs(q);
         
@@ -274,7 +256,6 @@ async function showProjectDetails(projectId, projectData) {
         html += `</tbody></table></div>`;
         projectDetailsContent.innerHTML = html;
 
-        // --- 4. ATTACH FILTERS ---
         setTimeout(() => {
             const logsSearchInput = document.getElementById('logsSearchInput');
             const logsSortSelect = document.getElementById('logsSortSelect');
@@ -285,13 +266,11 @@ async function showProjectDetails(projectId, projectData) {
                     const sortBy = logsSortSelect.value;
                     const logsTableBody = document.getElementById('logsTableBody');
                     
-                    // Filter logic
                     const filteredLogs = allLogs.filter(log => {
                         const txt = (log.type + log.materialName + log.workDescription + log.supplier).toLowerCase();
                         return txt.includes(searchTerm);
                     });
 
-                    // Sort logic
                     filteredLogs.sort((a, b) => {
                         const tA = a.timestamp?.seconds || 0;
                         const tB = b.timestamp?.seconds || 0;
@@ -301,7 +280,6 @@ async function showProjectDetails(projectId, projectData) {
                         return 0;
                     });
 
-                    // Re-render
                     let rowsHtml = '';
                     filteredLogs.forEach(log => {
                          const timestamp = log.timestamp?.toDate ? new Date(log.timestamp.toDate()).toLocaleString('en-IN') : 'N/A';
@@ -334,7 +312,6 @@ async function showProjectDetails(projectId, projectData) {
     }
 }
 
-// Close project details
 if(closeDetailsBtn) {
     closeDetailsBtn.addEventListener('click', () => {
         projectDetailsSection.style.display = 'none';
@@ -342,21 +319,16 @@ if(closeDetailsBtn) {
     });
 }
 
-// Load projects on page load
 if (projectsGrid) {
     loadAllProjects();
 }
 
-// =====================================================
-// LABOR ACTIVITY & EXTENDED FEATURES
-// =====================================================
 
 const laborProjectSelect = document.getElementById('laborProjectSelect');
 const laborStatsContainer = document.getElementById('laborStatsContainer');
 const closeLaborBtn = document.getElementById('closeLaborBtn');
 const closeVerifyBtn = document.getElementById('closeVerifyBtn');
 
-// Load projects for labor section
 async function loadProjectsForLabor() {
     try {
         const snap = await getDocs(collection(db, "projects"));
@@ -373,7 +345,6 @@ async function loadProjectsForLabor() {
     } catch (e) {}
 }
 
-// Load labor stats for selected project
 if (laborProjectSelect) {
     laborProjectSelect.addEventListener('change', async () => {
         const projectId = laborProjectSelect.value;
@@ -381,7 +352,7 @@ if (laborProjectSelect) {
         
         laborStatsContainer.innerHTML = "<p>Loading labor data...</p>";
         const chartSection = document.getElementById('laborChartSection');
-        if (chartSection) chartSection.style.display = 'block'; // Make sure chart section is visible
+        if (chartSection) chartSection.style.display = 'block'; 
         
         try {
             const laborersQuery = query(collection(db, "laborers"), where("projectId", "==", projectId));
@@ -401,25 +372,21 @@ if (laborProjectSelect) {
                 }
             });
 
-            // Prepare chart data
             const today = new Date();
             const dailyCount = {};
             for (let i = 6; i >= 0; i--) {
                 const date = new Date(today);
                 date.setDate(date.getDate() - i);
-                const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
+                const dateStr = date.toISOString().split('T')[0];
                 dailyCount[dateStr] = 0;
             }
 
-            // Fill chart data
             attendanceSnap.forEach(docSnap => {
                 const data = docSnap.data();
-                // Handle different date formats (string or timestamp)
                 let dateStr;
                 if(data.date && data.date.toDate) {
                      dateStr = data.date.toDate().toISOString().split('T')[0];
                 } else if(data.date) {
-                     // If stored as string "Mon Jan 01 2024" convert to YYYY-MM-DD
                      const d = new Date(data.date);
                      if(!isNaN(d)) dateStr = d.toISOString().split('T')[0];
                 }
@@ -529,7 +496,6 @@ function renderLaborChart(dailyCount) {
     });
 }
 
-// Hash Verification
 const verifyHashBtn = document.getElementById('verifyHashBtn');
 if (verifyHashBtn) {
     verifyHashBtn.addEventListener('click', async () => {
@@ -569,7 +535,6 @@ if (verifyHashBtn) {
     });
 }
 
-// Close buttons & Nav
 if (closeLaborBtn) {
     closeLaborBtn.addEventListener('click', () => {
         document.getElementById('laborSection').style.display = 'none';

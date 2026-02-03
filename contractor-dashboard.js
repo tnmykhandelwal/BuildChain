@@ -4,12 +4,12 @@ import { collection, getDocs, query, where, addDoc, orderBy, doc, deleteDoc } fr
 
 console.log("Contractor Dashboard Script Loaded");
 
-// DOM Elements
+
 const contractorName = document.getElementById('contractorName');
 const contractorProjects = document.getElementById('contractorProjects');
 const logoutBtn = document.getElementById('logoutBtn');
 
-// Quick diagnostics: log key DOM references AFTER querying
+
 console.log('DOM refs:', {
     contractorName, contractorProjects, logoutBtn
 });
@@ -46,14 +46,12 @@ const laborProjectSelect = document.getElementById('laborProjectSelect');
 let globalProjectMap = {}; 
 let globalLogs = []; 
 
-// --- LOGOUT ---
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         signOut(auth).then(() => window.location.href = "index.html");
     });
 }
 
-// --- 1. AUTH CHECK ---
 const contractorIDSpan = document.getElementById('contractorID');
 
 onAuthStateChanged(auth, async (user) => {
@@ -63,7 +61,6 @@ onAuthStateChanged(auth, async (user) => {
             const email = user.email || localStorage.getItem('contractorEmail') || '';
             if(contractorName) contractorName.innerText = email || 'Unknown';
 
-            // Check if logged in via MetaMask
             const walletAddress = localStorage.getItem('contractorWalletAddress');
             if(contractorIDSpan) {
                 if(walletAddress) {
@@ -73,7 +70,6 @@ onAuthStateChanged(auth, async (user) => {
                 }
             }
 
-            // Ensure we pass a valid email to load projects; fallback to stored contractorEmail
             const emailToUse = email || localStorage.getItem('contractorEmail') || '';
             await loadContractorProjects(emailToUse);
         } else {
@@ -81,12 +77,10 @@ onAuthStateChanged(auth, async (user) => {
         }
     } catch (err) {
         console.error('Error in auth callback:', err);
-        // show minimal error UI so user isn't stuck with Loading...
         if(contractorProjects) contractorProjects.innerHTML = '<p style="color:red; padding:16px;">Error loading dashboard. Check console.</p>';
     }
 });
 
-// --- 2. LOAD PROJECTS ---
 async function loadContractorProjects(email) {
     console.log('loadContractorProjects called with email:', email);
     if (!email) {
@@ -114,9 +108,9 @@ async function loadContractorProjects(email) {
 
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            globalProjectMap[doc.id] = data.title; // Save to map
+            globalProjectMap[doc.id] = data.title; 
 
-            // Card
+          
             if(contractorProjects) {
                 contractorProjects.insertAdjacentHTML('beforeend', `
                     <div class="portal-card contractor-card" style="width: auto; margin:0; text-align:left; align-items:start;">
@@ -126,7 +120,7 @@ async function loadContractorProjects(email) {
                     </div>
                 `);
             }
-            // Dropdown Options
+            
             const opt = `<option value="${doc.id}">${data.title}</option>`;
             dropdowns.forEach(dd => { if(dd) dd.insertAdjacentHTML('beforeend', opt); });
         });
@@ -138,13 +132,13 @@ async function loadContractorProjects(email) {
     }
 }
 
-// --- 3. NAVIGATION ---
+
 function resetView() {
     [projectSection, logSection, materialEntrySection, laborSection, historySection].forEach(el => { if(el) el.style.display = 'none'; });
     [navMyProjects, navDailyLog, navMaterialEntry, navLabor, navHistory].forEach(el => { if(el) el.classList.remove('active'); });
 }
 
-// Listeners
+
 if(navMyProjects) {
     navMyProjects.addEventListener('click', (e) => { e.preventDefault(); resetView(); projectSection.style.display='block'; navMyProjects.classList.add('active'); });
 }
@@ -167,7 +161,7 @@ if(navHistory) {
     });
 }
 
-// --- 4. HISTORY, SEARCH & SORT ---
+
 async function loadHistory() {
     historyListContainer.innerHTML = "<p>Loading your history...</p>";
     try {
@@ -230,7 +224,6 @@ function renderLogs(logsToRender) {
     });
 }
 
-// Search Logic
 if(searchInput) {
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
@@ -244,7 +237,7 @@ if(searchInput) {
     });
 }
 
-// Sort Logic
+
 if(sortSelect) {
     sortSelect.addEventListener('change', () => {
         const term = searchInput.value.toLowerCase();
@@ -278,7 +271,6 @@ function applySort(logs) {
 }
 
 
-// --- 5. LABOR LOGIC ---
 if(laborProjectSelect) {
     laborProjectSelect.addEventListener('change', () => {
         const pid = laborProjectSelect.value;
@@ -327,12 +319,10 @@ async function loadLaborers(projectId) {
             `);
         });
 
-        // Attach event listeners to buttons
         attachLaborButtonListeners();
     } catch (e) { console.error(e); }
 }
 
-// Event delegation for labor buttons
 function attachLaborButtonListeners() {
     laborListContainer.querySelectorAll('.btn-attendance').forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -386,11 +376,9 @@ if(addLaborForm) {
     });
 }
 
-// --- SUBMIT LOGIC ---
 if(dailyLogForm) {
     dailyLogForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        // Get email from auth or from localStorage (for MetaMask users)
         const submitterEmail = auth.currentUser.email || localStorage.getItem('contractorEmail') || 'Unknown';
         const logData = {
             projectId: logProjectSelect.value,
@@ -408,7 +396,6 @@ if(dailyLogForm) {
 if(materialForm) {
     materialForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        // Get email from auth or from localStorage (for MetaMask users)
         const submitterEmail = auth.currentUser.email || localStorage.getItem('contractorEmail') || 'Unknown';
         const materialData = {
             projectId: materialProjectSelect.value,

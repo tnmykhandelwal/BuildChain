@@ -89,7 +89,7 @@ if (signupForm) {
     });
 }
 const metamaskBtn = document.getElementById('metamaskLoginBtn');
-// metamaskBtn listener in contractor-auth.js
+
 if (metamaskBtn) {
     metamaskBtn.addEventListener('click', async () => {
         const statusMessage = document.getElementById('statusMessage');
@@ -110,7 +110,6 @@ if (metamaskBtn) {
 
             await signInAnonymously(auth);
 
-            // Query for CONTRACTOR specifically
             const q = query(
                 collection(db, 'users'), 
                 where('walletAddress', '==', wallet), 
@@ -119,7 +118,6 @@ if (metamaskBtn) {
             const snap = await getDocs(q);
 
             if (snap.empty) {
-                // Wallet not registered - ask for email
                 statusMessage.style.color = 'blue';
                 statusMessage.innerText = 'Wallet not found. Please enter your contractor email to register this wallet.';
                 
@@ -130,7 +128,7 @@ if (metamaskBtn) {
                     return;
                 }
 
-                // Create contractor account with wallet
+                
                 statusMessage.style.color = 'blue';
                 statusMessage.innerText = 'Registering wallet with your account...';
                 await setDoc(doc(db, "users", auth.currentUser.uid), {
@@ -143,14 +141,11 @@ if (metamaskBtn) {
                 statusMessage.style.color = 'green';
                 statusMessage.innerText = 'Wallet registered! Redirecting to dashboard...';
                 localStorage.setItem('contractorWalletAddress', wallet);
-                // store contractor email locally for dashboard usage
                 localStorage.setItem('contractorEmail', contractorEmail);
                 setTimeout(() => window.location.href = 'contractor-dashboard.html', 1000);
             } else {
-                // Wallet found - login
                 statusMessage.style.color = 'green';
                 statusMessage.innerText = 'Authenticated! Redirecting...';
-                // store email from user record if available
                 const foundEmail = snap.docs[0].data().email;
                 if (foundEmail) localStorage.setItem('contractorEmail', foundEmail);
                 localStorage.setItem('contractorWalletAddress', wallet);

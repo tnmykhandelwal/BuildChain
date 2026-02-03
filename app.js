@@ -19,7 +19,7 @@ const statusMessage = document.getElementById('statusMessage');
 const signupForm = document.getElementById('signupForm');
 const metamaskBtn = document.getElementById('metamaskLoginBtn');
 
-// Standard Email/Password Login
+
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -42,7 +42,7 @@ if (loginForm) {
     });
 }
 
-// Standard Email/Password Signup
+
 if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -63,7 +63,7 @@ if (signupForm) {
     });
 }
 
-// MetaMask Login & Auto-Registration for Admin
+
 if (metamaskBtn) {
     metamaskBtn.addEventListener('click', async () => {
         const status = document.getElementById('statusMessage');
@@ -80,7 +80,7 @@ if (metamaskBtn) {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const wallet = accounts[0].toLowerCase();
 
-            // Establish anonymous session to allow Firestore read permissions
+            
             await signInAnonymously(auth);
 
             const q = query(collection(db, 'users'), where('walletAddress', '==', wallet), where('role', '==', 'admin'));
@@ -98,7 +98,7 @@ if (metamaskBtn) {
 
             status.style.color = 'green';
             status.innerText = 'Authenticated. Redirecting...';
-            // Store wallet address for dashboard display
+            
             localStorage.setItem('adminWalletAddress', wallet);
             setTimeout(() => window.location.href = 'admin-dashboard.html', 600);
 

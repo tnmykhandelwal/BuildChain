@@ -2,19 +2,19 @@ import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, where, limit, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-// --- DOM ELEMENTS ---
+
 const adminEmailSpan = document.getElementById('adminEmail');
 const logoutBtn = document.getElementById('logoutBtn');
 const sidebar = document.getElementById('adminSidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 
-// Navigation Links
+
 const createProjectLink = document.getElementById('navCreate');
 const viewProjectsLink = document.getElementById('navView');
 const navMilestones = document.getElementById('navMilestones');
 const navLogs = document.getElementById('navLogs');
 
-// Sections
+
 const createProjectFormElement = document.getElementById('createProjectForm');
 const createProjectSection = createProjectFormElement ? createProjectFormElement.parentElement : null;
 
@@ -24,14 +24,13 @@ const logsSection = document.getElementById('logsSection');
 const projectsContainer = document.getElementById('projectsContainer');
 const logsContainer = document.getElementById('logsContainer');
 
-// Forms
+
 const milestoneForm = document.getElementById('milestoneForm');
 const milestoneSelect = document.getElementById('milestoneProjectSelect');
 
-// --- AUTHENTICATION ---
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // Check if logged in via MetaMask
         const walletAddress = localStorage.getItem('adminWalletAddress');
         if (walletAddress) {
             if (adminEmailSpan) adminEmailSpan.innerText = walletAddress;
@@ -49,14 +48,12 @@ if (logoutBtn) {
     });
 }
 
-// --- SIDEBAR TOGGLE ---
 if (sidebarToggle) {
     sidebarToggle.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
     });
 }
 
-// --- NAVIGATION LOGIC ---
 function resetView() {
     if (createProjectSection) createProjectSection.style.display = 'none';
     if (listSection) listSection.style.display = 'none';
@@ -112,7 +109,6 @@ if (navLogs) {
     });
 }
 
-// --- PROJECT FUNCTIONS ---
 async function loadProjects() {
     if (!projectsContainer) return;
     projectsContainer.innerHTML = "<p>Loading projects...</p>";
@@ -182,7 +178,7 @@ function attachDeleteListeners() {
     });
 }
 
-// --- LOGS & VERIFICATION SYSTEM ---
+
 function generateHash(data) {
     if (typeof CryptoJS === 'undefined') {
         alert("Error: CryptoJS not loaded. Refresh page.");
@@ -210,15 +206,15 @@ async function loadLogs() {
     if (!logsContainer) return;
     logsContainer.innerHTML = "<p>Fetching logs...</p>";
     try {
-        // Load project titles to map projectId -> title
+    
         const projectsSnap = await getDocs(collection(db, "projects"));
         const projectMap = {};
         projectsSnap.forEach(doc => { projectMap[doc.id] = doc.data().title; });
 
-        // Expose projectMap globally for render helpers
+        
         window.projectMap = projectMap;
 
-        // Load logs ordered by timestamp desc
+        
         const q = query(collection(db, "logs"), orderBy("timestamp", "desc"));
         const logsSnap = await getDocs(q);
 
@@ -229,10 +225,8 @@ async function loadLogs() {
             return;
         }
 
-        // Build logs data array
         const logsData = logsSnap.docs.map(d => ({ id: d.id, data: d.data() }));
 
-        // Preload images (proofs) concurrently using fetch + promises
         const imagePromises = logsData.map(async (log) => {
             const photoLink = log.data.photoLink || log.data.photoURL || null;
             if (!photoLink) return { id: log.id, url: null };
@@ -252,17 +246,15 @@ async function loadLogs() {
         const imagesMap = {};
         imageResults.forEach(r => { if (r && r.id) imagesMap[r.id] = r.url; });
 
-        // Store globally for filtering/sorting
         window.adminLogsData = logsData;
         window.adminLogsImages = imagesMap;
 
-        // Setup search/sort handlers
         const searchInput = document.getElementById('logsSearchInput');
         const sortSelect = document.getElementById('logsSortSelect');
         if (searchInput) searchInput.addEventListener('input', () => renderAdminLogs());
         if (sortSelect) sortSelect.addEventListener('change', () => renderAdminLogs());
 
-        // Initial render
+    
         renderAdminLogs();
 
     } catch (error) {
@@ -284,7 +276,7 @@ function renderAdminLogs() {
         return text.includes(searchTerm);
     });
 
-    // Sorting
+    
     filtered.sort((a, b) => {
         const da = a.data;
         const db = b.data;
@@ -301,14 +293,14 @@ function renderAdminLogs() {
         return 0;
     });
 
-    // Render
+    
     logsContainer.innerHTML = '';
     if (filtered.length === 0) {
         logsContainer.innerHTML = '<p>No logs match your search.</p>';
         return;
     }
 
-    // Build cards
+    
     filtered.forEach(item => {
         const id = item.id;
         const d = item.data;
@@ -361,10 +353,10 @@ function renderAdminLogs() {
         logsContainer.insertAdjacentHTML('beforeend', card);
     });
 
-    // Re-attach verify listeners after render
+    
     attachVerifyListeners();
 
-    // Allow clicking the hash text to copy (no separate button)
+
     const hashSpans = logsContainer.querySelectorAll('.log-hash');
     hashSpans.forEach(span => {
         span.style.cursor = 'pointer';
@@ -374,7 +366,7 @@ function renderAdminLogs() {
             if (!h) return;
             try {
                 await navigator.clipboard.writeText(h);
-                // small visual feedback by briefly changing color
+                
                 const orig = span.style.color;
                 span.style.color = '#27ae60';
                 setTimeout(() => { span.style.color = orig; }, 1000);
@@ -393,7 +385,7 @@ function attachVerifyListeners() {
             const projectId = e.target.getAttribute('data-pid');
             if(!confirm("Verify this work? This will permanently add it to the blockchain ledger.")) return;
             
-            // Fetch project to get security PIN
+            
             try {
                 const projectDoc = await getDoc(doc(db, "projects", projectId));
                 const projectData = projectDoc.data();
@@ -404,10 +396,10 @@ function attachVerifyListeners() {
                     return;
                 }
 
-                // Prompt admin for security PIN
+                
                 const enteredPIN = prompt("Enter the project security PIN to verify and add log to blockchain:");
                 if (enteredPIN === null) {
-                    // User clicked Cancel
+                    
                     return;
                 }
                 if (enteredPIN !== storedPIN) {
@@ -415,7 +407,7 @@ function attachVerifyListeners() {
                     return;
                 }
 
-                // PIN is correct, proceed with verification
+                
                 e.target.innerText = "Verifying...";
                 e.target.disabled = true;
                 
@@ -450,7 +442,7 @@ function attachVerifyListeners() {
     });
 }
 
-// --- OTHER LOGIC ---
+
 if (createProjectFormElement) {
     createProjectFormElement.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -501,7 +493,7 @@ if (milestoneForm) {
         const stage = document.querySelector('input[name="stage"]:checked')?.value;
         if (!pid || !stage) return alert("Select all fields");
         
-        // Fetch project to get PIN
+
         const projectDoc = await getDoc(doc(db, "projects", pid));
         const projectData = projectDoc.data();
         const storedPIN = projectData?.securityPIN;

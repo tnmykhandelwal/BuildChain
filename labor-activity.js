@@ -1,13 +1,11 @@
 import { db } from './firebase-config.js';
 import { collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-// --- DOM ELEMENTS ---
 const projectSelect = document.getElementById('laborProjectSelect');
 const sidebar = document.getElementById('rightSidebar');
 const toggleBtn = document.getElementById('toggleSidebarBtn');
 const backBtn = document.getElementById('backBtn');
 
-// Sections
 const sections = {
     metrics: document.getElementById('metricsSection'),
     charts: document.getElementById('chartsSection'),
@@ -16,7 +14,6 @@ const sections = {
     insights: document.getElementById('insightsSection')
 };
 
-// Nav Buttons
 const navs = {
     metrics: document.getElementById('navMetrics'),
     charts: document.getElementById('navCharts'),
@@ -25,22 +22,18 @@ const navs = {
     insights: document.getElementById('navInsights')
 };
 
-// Chart Instances
 let workIntensityChart = null;
 let roleDistributionChart = null;
 let attendancePatternChart = null;
 let statusDistributionChart = null;
 
-// Current Data
 let currentProjectData = null;
 let allWorkers = [];
 let allAttendance = [];
 
-// Initialize
 document.getElementById('sidebarName').innerText = "Guest";
 loadProjects();
 
-// SIDEBAR TOGGLE
 let isCollapsed = false;
 toggleBtn.addEventListener('click', () => {
     isCollapsed = !isCollapsed;
@@ -55,12 +48,10 @@ toggleBtn.addEventListener('click', () => {
     }
 });
 
-// BACK BUTTON
 backBtn.addEventListener('click', () => {
     window.location.href = "index.html";
 });
 
-// SECTION NAVIGATION
 function switchTab(tabName) {
     Object.values(sections).forEach(sec => sec.style.display = 'none');
     Object.values(navs).forEach(nav => nav.classList.remove('active'));
@@ -72,7 +63,6 @@ Object.keys(navs).forEach(key => {
     navs[key].addEventListener('click', () => switchTab(key));
 });
 
-// LOAD PROJECTS
 async function loadProjects() {
     try {
         const snap = await getDocs(collection(db, "projects"));
@@ -89,7 +79,6 @@ async function loadProjects() {
     }
 }
 
-// HANDLE PROJECT SELECTION
 projectSelect.addEventListener('change', async () => {
     const pid = projectSelect.value;
     if (!pid) {
@@ -103,10 +92,8 @@ projectSelect.addEventListener('change', async () => {
     navs.metrics.classList.add('active');
 });
 
-// LOAD ALL LABOR DATA
 async function loadLaborData(pid) {
     try {
-        // Load workers
         const qWorkers = query(collection(db, "laborers"), where("projectId", "==", pid));
         const snapWorkers = await getDocs(qWorkers);
         allWorkers = [];
@@ -114,7 +101,6 @@ async function loadLaborData(pid) {
             allWorkers.push({ id: doc.id, ...doc.data() });
         });
 
-        // Load attendance
         const qAtt = query(collection(db, "attendance_logs"), where("projectId", "==", pid));
         const snapAtt = await getDocs(qAtt);
         allAttendance = [];
@@ -122,7 +108,6 @@ async function loadLaborData(pid) {
             allAttendance.push(doc.data());
         });
 
-        // Update all views
         updateMetrics();
         renderCharts();
         renderLaborTable();
@@ -135,7 +120,6 @@ async function loadLaborData(pid) {
     }
 }
 
-// UPDATE KEY METRICS
 function updateMetrics() {
     const totalWorkers = allWorkers.length;
     
@@ -152,7 +136,6 @@ function updateMetrics() {
         ? Math.round((totalManDays / (totalWorkers * 30)) * 100) 
         : 0;
 
-    // Count roles
     const roleCounts = {};
     allWorkers.forEach(worker => {
         const role = worker.role || "Unassigned";
@@ -167,7 +150,6 @@ function updateMetrics() {
     document.getElementById('commonRole').innerText = mostCommonRole;
 }
 
-// RENDER CHARTS
 async function renderCharts() {
     renderWorkIntensityChart();
     renderRoleDistributionChart();
@@ -175,7 +157,6 @@ async function renderCharts() {
     renderStatusDistributionChart();
 }
 
-// Chart 1: Work Intensity (7-Day Trend)
 function renderWorkIntensityChart() {
     const ctx = document.getElementById('workIntensityChart').getContext('2d');
     
@@ -254,7 +235,6 @@ function renderWorkIntensityChart() {
     });
 }
 
-// Chart 2: Role Distribution
 function renderRoleDistributionChart() {
     const ctx = document.getElementById('roleDistributionChart').getContext('2d');
     
@@ -314,7 +294,6 @@ function renderRoleDistributionChart() {
     });
 }
 
-// Chart 3: Attendance Pattern (by day of week)
 function renderAttendancePatternChart() {
     const ctx = document.getElementById('attendancePatternChart').getContext('2d');
     
@@ -377,7 +356,6 @@ function renderAttendancePatternChart() {
     });
 }
 
-// Chart 4: Status Distribution
 function renderStatusDistributionChart() {
     const ctx = document.getElementById('statusDistributionChart').getContext('2d');
     
@@ -387,7 +365,6 @@ function renderStatusDistributionChart() {
         'Inactive': 0
     };
 
-    // Simple logic: if worker has no recent attendance, mark as inactive
     const recentWorkers = new Set();
     const today = new Date();
     const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -432,7 +409,6 @@ function renderStatusDistributionChart() {
     });
 }
 
-// RENDER LABOR TABLE
 function renderLaborTable() {
     const tbody = document.getElementById('laborTableBody');
     
@@ -448,7 +424,6 @@ function renderLaborTable() {
         }
     });
 
-    // Populate role filter
     const roleFilter = document.getElementById('roleFilter');
     const roles = new Set();
     allWorkers.forEach(w => roles.add(w.role || "Unassigned"));
@@ -485,7 +460,6 @@ function renderLaborTable() {
 
     tbody.innerHTML = html;
 
-    // Search & Filter
     document.getElementById('laborSearch').addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();
         const role = document.getElementById('roleFilter').value;
@@ -505,7 +479,6 @@ function renderLaborTable() {
     });
 }
 
-// RENDER WORKER PROFILE CARDS
 function renderWorkerCards() {
     const container = document.getElementById('workerCardsContainer');
     
@@ -568,7 +541,6 @@ function renderWorkerCards() {
     });
 }
 
-// RENDER INSIGHTS
 function renderInsights() {
     const container = document.getElementById('insightsContent');
     
