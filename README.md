@@ -1,4 +1,4 @@
-# BuildChain- A Construction Transparency System
+# ⛓️ <strong>BUILD</strong><em>CHAIN</em> - A Construction Transparency System
 
 ## Description:
 
@@ -6,21 +6,12 @@
 
 ## Features:
 
-- User Authentication: Using Firebase Auth for admin (Govt/Institution), contractor / subcontractor / labor manager using Firebase Authentication.
+- User Authentication: Using Firebase Auth for admin (Govt/Institution), contractor / subcontractor / labor manager using Firebase Authentication. Metamask Authentication is also enabled for fast login after connecting wallet.
 - Project Registry: Admin can create new projects with title, contractor, budget, location, start/end dates, documents & blueprint uploads, etc. The Projects are exclusively assigned to the respective contractor to make any updates to it.
 - Material Delivery Logs: Contractors log contains material name, supplier, quantity, delivery photos, time of delivery. Each log is hashed + chained to previous.
 - Labor Attendance System: Labor manager can add/assign laborers, mark daily attendance, track daily wages, attendance is stored in append-only format.
 - Payment Milestones: Admin sets milestones (Foundation → Flooring → Roofing → Completion). Contractor uploads proof → Admin approves. Each milestone approval becomes a hashed log entry.
 - Public Transparency Dashboard: Shows budget usage, material logs, labor activity, milestone completion, hash verification tool.
-
-
-## Screenshots
-
-<!-- ![Home1](./docs/screenshots/Home-page-part1.png)
-![Home2](./docs/screenshots/Home-page-part2.png)
-![RegisterComplaint](./docs/screenshots/Register-complaint.png)
-![UpdateFIR](./docs/screenshots/Update-FIR-page.png)
-![CrimeStatistics](./docs/screenshots/Crime-statistics-page.png) -->
 
 
 ## Tech Stack
